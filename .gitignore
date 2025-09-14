@@ -1,0 +1,12 @@
+*
+
+# Directories
+!cpp/
+!java/
+!python/
+
+# File types
+!*.md
+!*.py
+!*.cpp
+!*.java
