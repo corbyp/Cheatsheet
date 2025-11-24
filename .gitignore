@@ -1,6 +1,7 @@
 *
 
 # Directories
+!c/
 !cpp/
 !java/
 !python/
@@ -10,3 +11,6 @@
 !*.py
 !*.cpp
 !*.java
+!*.hpp
+!*.h
+!*.c
