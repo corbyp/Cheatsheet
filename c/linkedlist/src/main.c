@@ -1,88 +1,142 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-struct List {
-  struct List* next;
+struct Element {
+  struct Element *next;
   int value;
 };
 
-void print_item(struct List* item) {
-  printf("%p, %d, %p\n", item, item->value, item->next);
-}
+struct List {
+  struct Element *head;
+  size_t size;
+};
 
-void print_list(struct List* root) {
-  struct List* curr = root;
+void print_list(struct List *root) {
+  struct Element *curr = root->head;
 
-  while (curr != NULL) {
-    print_item(curr);
-    curr = curr->next;
+  size_t str_len = 4; // 2 for "[" and "]\n\0" at the end
+
+  for (curr = root->head; curr != NULL; curr = curr->next) {
+    str_len += snprintf(NULL, 0, "%d", curr->value); // len of number
+
+    if (curr->next != NULL) {
+      str_len += 2; // 2 more len for ", "
+    }
   }
+
+  char str[str_len];
+  str[0] = '[';
+
+  size_t ctr = 1;
+
+  for (curr = root->head; curr != NULL; curr = curr->next) {
+    char temp[11 + 1]; // 11 because of max int size: "-2147483648\0"
+
+    int len = snprintf(temp, 11 + 1, "%d", curr->value);
+
+    strncpy(str + ctr, temp, len);
+    ctr += len;
+
+    if (curr->next != NULL) {
+      strncpy(str + ctr, ", ", 2);
+      ctr += 2;
+    }
+  }
+
+  str[str_len - 3] = ']';
+  str[str_len - 2] = '\n';
+  str[str_len - 1] = '\0';
+
+  printf("%s\n", str);
 }
 
-struct List* l_add(struct List* root, int val) {
+struct List *init() {
+  struct List *root = (struct List *)malloc(sizeof(struct List));
   if (root == NULL) {
-    root = (struct List*) malloc(sizeof(struct List));
+    fprintf(stderr, "Could not malloc to init list\n");
+    exit(1);
+  }
 
-    if (root == NULL) {
+  root->head = NULL;
+  root->size = 0;
+
+  return root;
+}
+
+void l_add(struct List *root, int val) {
+  struct Element *head = root->head;
+  if (head == NULL) {
+    head = (struct Element *)malloc(sizeof(struct Element));
+
+    if (head == NULL) {
       goto error_handling;
     }
 
-    root->value = val;
-    return root;
+    head->value = val;
+
+    root->head = head;
+    root->size++;
+    return;
   } else {
-    struct List* temp = root;
-    while (temp->next != NULL) {
-      temp = temp->next;
-    }
-    temp->next = (struct List*) malloc(sizeof(struct List));
+    struct Element *curr = head;
 
-    if (temp->next == NULL) {
+    while (curr->next != NULL) {
+      curr = curr->next;
+    }
+    curr->next = (struct Element *)malloc(sizeof(struct Element));
+
+    if (curr->next == NULL) {
       goto error_handling;
     }
 
-    temp->next->value = val;
-    return root;
+    curr->next->value = val;
+    root->size++;
+    return;
   }
 
-  error_handling:
-      fprintf(stderr, "Could not malloc for %d\n", val);
-      exit(1);
+error_handling:
+  fprintf(stderr, "Could not malloc for %d\n", val);
+  exit(1);
 }
 
-struct List* l_remove(struct List* root, int val) {
-  if (root == NULL) {
+void l_remove(struct List *root, int val) {
+  struct Element *head = root->head;
+
+  if (head == NULL) {
     fprintf(stderr, "Tried to remove from empty list!\n");
-    exit(1);
-  } else if (root->value == val) {
-    struct List* temp = root->next;
-    free(root);
-    return temp;
+  } else if (head->value == val) {
+    struct Element *temp = root->head;
+    root->head = head->next;
+    free(temp);
+    root->size--;
   } else {
-    struct List* temp = root;
-    struct List* parent = NULL;
-    
-    while (temp != NULL) {
-      if (temp->value == val) {
-        parent->next = temp->next;
-        free(temp);
-        return root;
+    struct Element *curr = head->next;
+    struct Element *parent = head;
+
+    while (curr != NULL) {
+      if (curr->value == val) {
+        parent->next = curr->next;
+        free(curr);
+        root->size--;
+        return;
       }
-      parent = temp;
-      temp = temp->next;
+      parent = curr;
+      curr = curr->next;
     }
 
-    return root;
+    fprintf(stderr, "Item %d not found!\n", val);
   }
 }
 
-struct List* reverse(struct List* root) {
-  if (root == NULL) {
+void reverse(struct List *root) {
+  struct Element *head = root->head;
+  if (head == NULL) {
     fprintf(stderr, "Tried reversing an empty list!\n");
-    exit(1);
   } else {
-    struct List* temp;
-    struct List* parent = NULL;
-    struct List* child = root;
+    struct Element *temp;
+    struct Element *parent = NULL;
+    struct Element *child = head;
 
     while (child != NULL) {
       temp = child->next;
@@ -91,19 +145,56 @@ struct List* reverse(struct List* root) {
       child = temp;
     }
 
-    return parent;
+    root->head = parent;
+  }
+}
+
+void print_help() { printf("q: quit, c: create, a: add, p: print\n"); }
+
+void interactive() {
+  printf("Starting user input\n");
+  int c;
+
+  struct List *root;
+  int count = 0;
+
+  while (1) {
+    c = getc(stdin);
+
+    switch (c) {
+    case 'q':
+      printf("Stopping\n");
+      return;
+    case 'c':
+      printf("Creating list\n");
+      root = init();
+      break;
+    case 'a':
+      printf("Doing insert\n");
+      l_add(root, count++);
+      break;
+    case 'p':
+      print_list(root);
+      break;
+      // default:
+      // print_help();
+      // break;
+    }
   }
 }
 
 int main(void) {
-  struct List* root = NULL;
+  struct List *root = init();
 
-  for (int i = 0; i < 100; ++i) {
-    root = l_add(root, i);
+  for (int i = 0; i < 400; ++i) {
+    l_add(root, i);
   }
 
-  root = reverse(root);
+  // reverse(root);
+
   print_list(root);
-  
+
+  // interactive();
+
   return 0;
 }
