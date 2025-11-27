@@ -16,7 +16,7 @@ run_compile: $(C_FILES)
 run: compile run_compile
 
 compile_debug: $(C_FILES)
-	$(CXX) $(C_FILES) -o $(TARGET) -g
+	$(CC) -I$(INCLUDE) $(C_FILES) -o $(TARGET) -g
 
 run_debug: $(C_FILES)
 	gdb $(TARGET)

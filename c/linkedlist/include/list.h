@@ -1,20 +1,51 @@
 #pragma once
 
-struct Element {
-  struct Element *next;
+typedef struct Node {
+  struct Node* next;
   int value;
-};
+} Node;
 
-struct List {
-  struct Element *head;
+typedef struct List {
+  struct Node* head;
   unsigned long size;
-};
+} List;
 
-void print_list(struct List *list);
-struct List *init();
-void add(struct List *list, int val);
-void remove_val(struct List *list, int val);
-void reverse(struct List *list);
-int get(struct List *list, unsigned long index);
-_Bool includes(struct List *list, int val);
-void insert(struct List *list, unsigned long index, int val);
+/*
+Print LIST of size n in format "[x1, x2, ..., xn]"
+*/
+void ll_print(List *list);
+
+/*
+Initializes list on heap and gives back pointer
+*/
+List *ll_init();
+
+/*
+Adds element with VAL to end of LIST
+*/
+void ll_add(List *list, int val);
+
+/*
+Removes VAL from LIST
+*/
+void ll_remove(List *list, int val);
+
+/*
+Reverses LIST
+*/
+void ll_reverse(List *list);
+
+/*
+Returns VAL in position INDEX from LIST
+*/
+int ll_get(List *list, unsigned long index);
+
+/*
+Returns 1 if VAL is in LIST, otherwise 0
+*/
+_Bool ll_includes(List *list, int val);
+
+/*
+Inserts VAL into LIST at position INDEX
+*/
+void ll_insert(List *list, unsigned long index, int val);

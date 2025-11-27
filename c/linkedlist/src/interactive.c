@@ -19,14 +19,14 @@ void interactive() {
       return;
     case 'c':
       printf("Creating list\n");
-      root = init();
+      root = ll_init();
       break;
     case 'a':
       printf("Doing insert\n");
-      add(root, count++);
+      ll_add(root, count++);
       break;
     case 'p':
-      print_list(root);
+      ll_print(root);
       break;
     case '\n':
       break;

@@ -2,19 +2,17 @@
 #include <stdio.h>
 
 int main(void) {
-  struct List* list = init();
+  List* list = ll_init();
 
   for (int i = 0; i < 100; ++i) {
-    add(list, i);
+    ll_add(list, i);
   }
 
-  reverse(list);
+  ll_reverse(list);
+  ll_print(list);
+  ll_insert(list, 10, 5);
 
-  print_list(list);
-
-  insert(list, 10, 5);
-
-  printf("%d\n", get(list, 10));
+  printf("%d\n", ll_get(list, 10));
   
   return 0;
 }
