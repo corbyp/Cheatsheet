@@ -11,3 +11,4 @@
 !*.cpp
 !*.hpp
 !Makefile
+!*.json
