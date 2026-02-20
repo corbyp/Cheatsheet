@@ -1,7 +1,7 @@
 SRC = src/
 INCLUDE = include/
 
-C_FILES = $(addprefix $(SRC), main.c list.c interactive.c)
+C_FILES = $(addprefix $(SRC), main.c list.c)
 
 TARGET = app
 

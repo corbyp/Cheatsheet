@@ -1,7 +1,7 @@
 SRC = src/
-INCLUDE = ./include -lcrypto
+INCLUDE = include/
 
-C_FILES = $(addprefix $(SRC), main.c)
+C_FILES = $(addprefix $(SRC), main.c binary_tree.c)
 
 TARGET = app
 
@@ -11,7 +11,7 @@ compile: $(C_FILES)
 	$(CC) -I$(INCLUDE) $(C_FILES) -o $(TARGET)
 
 run_compile: $(C_FILES)
-	./$(TARGET) $(ARGS)
+	./$(TARGET)
 
 run: compile run_compile
 

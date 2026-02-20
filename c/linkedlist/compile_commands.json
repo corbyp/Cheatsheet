@@ -1,7 +1,41 @@
 [
   {
-    "directory": "/mnt/data/files/coding/mixed/LearnProgramming/c/linkedlist",
-    "command": "gcc -Iinclude",
-    "file": ""
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Iinclude/",
+      "-o",
+      "app",
+      "src/main.c"
+    ],
+    "directory": "/mnt/games/coding/LearnProgramming/c/linkedlist",
+    "file": "/mnt/games/coding/LearnProgramming/c/linkedlist/src/main.c",
+    "output": "/mnt/games/coding/LearnProgramming/c/linkedlist/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Iinclude/",
+      "-o",
+      "app",
+      "src/list.c"
+    ],
+    "directory": "/mnt/games/coding/LearnProgramming/c/linkedlist",
+    "file": "/mnt/games/coding/LearnProgramming/c/linkedlist/src/list.c",
+    "output": "/mnt/games/coding/LearnProgramming/c/linkedlist/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Iinclude/",
+      "-o",
+      "app",
+      "src/interactive.c"
+    ],
+    "directory": "/mnt/games/coding/LearnProgramming/c/linkedlist",
+    "file": "/mnt/games/coding/LearnProgramming/c/linkedlist/src/interactive.c",
+    "output": "/mnt/games/coding/LearnProgramming/c/linkedlist/app"
   }
 ]

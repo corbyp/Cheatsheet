@@ -1,0 +1,28 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Iinclude/",
+      "-o",
+      "app",
+      "src/main.c"
+    ],
+    "directory": "/mnt/games/coding/LearnProgramming/c/binary_tree",
+    "file": "/mnt/games/coding/LearnProgramming/c/binary_tree/src/main.c",
+    "output": "/mnt/games/coding/LearnProgramming/c/binary_tree/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-Iinclude/",
+      "-o",
+      "app",
+      "src/binary_tree.c"
+    ],
+    "directory": "/mnt/games/coding/LearnProgramming/c/binary_tree",
+    "file": "/mnt/games/coding/LearnProgramming/c/binary_tree/src/binary_tree.c",
+    "output": "/mnt/games/coding/LearnProgramming/c/binary_tree/app"
+  }
+]
