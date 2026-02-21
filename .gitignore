@@ -3,6 +3,7 @@
 !*/
 
 !*.md
+!Makefile
 
 !*.py
 !*.h
@@ -10,5 +11,4 @@
 !*.java
 !*.cpp
 !*.hpp
-!Makefile
-!*.json
+!*.s
