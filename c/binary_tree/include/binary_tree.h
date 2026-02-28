@@ -4,6 +4,7 @@
 
 typedef struct Node {
   int value;
+  struct Node *parent;
   struct Node *left;
   struct Node *right;
 } Node;
@@ -14,6 +15,9 @@ typedef struct Tree {
 
 // Adds node to tree
 void bt_add(Tree *tree, int val);
+
+// Removes given value from tree
+void bt_remove(Tree *tree, int val);
 
 // Initializes tree.
 // This is just necessary to actually put tree->root as NULL

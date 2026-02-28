@@ -11,6 +11,18 @@ int main(void) {
   }
 
   bt_print(&tree);
+    printf("--------------------------------------\n");
+
+  bt_remove(&tree, 3);
+  bt_print(&tree);
+    printf("--------------------------------------\n");
+
+  for (int i = 0; i < 21; ++i) {
+    printf("Removing: %d\n", i);
+    bt_remove(&tree, i);
+    bt_print(&tree);
+    printf("--------------------------------------\n");
+  }
 
   printf("%b\n", bt_contains(&tree, 15));
 
