@@ -1,29 +1,35 @@
+ASM = nasm
+LD = ld
+TARGET = app
 SRC = src/
 INCLUDE = include/
 
-S_FILES = $(addprefix $(SRC), main.s)
-
-TARGET = app
+S_FILES = $(addprefix $(SRC), main.asm)
 
 all: run
 
+# normal
 compile: $(S_FILES)
-	$(AS) $(S_FILES) -o $(TARGET).o
-
-link: $(S_FILES)
-	$(CC) -o $(TARGET) $(TARGET).o -nostdlib -static
-
-build: compile link
-
-debug: $(TARGET)
-	gdb $(TARGET)
+	$(ASM) -f elf64 $(S_FILES) -o $(TARGET).o
 
 exec: $(TARGET)
 	./$(TARGET)
 
-clean: $(TARGET)
+# debug
+compiled: $(S_FILES)
+	$(ASM) -f elf64 -g -F dwarf $(S_FILES) -o $(TARGET).o
+
+execd: $(TARGET)
+	gdb $(TARGET)
+
+# general
+link: $(S_FILES)
+	$(LD) -o $(TARGET) $(TARGET).o
+
+clean:
 	rm $(TARGET) $(TARGET).o
 
-run: compile link exec
-rund: compile link debug
-
+build: compile link
+buildd: compiled link
+run: build exec clean
+rund: buildd execd clean
