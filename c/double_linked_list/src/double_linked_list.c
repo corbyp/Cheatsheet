@@ -14,7 +14,7 @@ void check_list(List *list) {
 
 // public functions
 
-void add(List *list, int value) {
+void dll_add(List *list, int value) {
   check_list(list);
 
   Node *node = malloc(sizeof(Node));
@@ -71,7 +71,7 @@ void dll_remove(List *list, int value) {
   }
 }
 
-void clear(List *list) {
+void dll_clear(List *list) {
   check_list(list);
 
   Node *cur = list->root;
@@ -86,11 +86,13 @@ void clear(List *list) {
   }
 }
 
-void print(List *list) {
+void dll_print(List *list) {
   check_list(list);
 
-  if (!list->root)
+  if (!list->root) {
+    printf("[]\n");
     return;
+  }
 
   printf("[");
   Node *cur = list->root;
@@ -102,7 +104,7 @@ void print(List *list) {
   printf("]\n");
 }
 
-void print2(List *list) {
+void dll_print2(List *list) {
   check_list(list);
 
   if (!list->root)

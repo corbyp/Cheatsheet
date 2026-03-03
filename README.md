@@ -8,6 +8,7 @@ I often forget how certain things work in different programming languages. Inste
 
 - **[C](c/)**
   - **[Linked List](c/linked_list)**
+  - **[Double Linked List](c/double_linked_list)**
   - **[Binary Search Tree](c/binary_search_tree)**
 - **[C++](cpp/)**
 

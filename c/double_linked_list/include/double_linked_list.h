@@ -11,9 +11,9 @@ typedef struct List {
   int size;
 } List;
 
-void add(List *list, int value);
+void dll_add(List *list, int value);
 void dll_remove(List *list, int value);
-void clear(List *list);
+void dll_clear(List *list);
 
-void print(List *list);
-void print2(List *list);
+void dll_print(List *list);
+void dll_print2(List *list);

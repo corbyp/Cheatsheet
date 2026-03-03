@@ -4,16 +4,14 @@ int main(void) {
   List list;
 
   for (int i = 0; i < 20; ++i) {
-    add(&list, i);
+    dll_add(&list, i);
   }
   
-  print2(&list);
+  dll_print2(&list);
 
-  for (int i = 0; i < 20; ++i) {
-  dll_remove(&list, 0);
-  }
-
-  print2(&list);
+  dll_clear(&list);
+  
+  dll_print(&list);
 
   return 0;
 }
