@@ -1,26 +1,29 @@
 SRC = src/
 INCLUDE = include/
 
-C_FILES = $(addprefix $(SRC), main.c binary_search_tree.c)
+C_FILES = $(addprefix $(SRC), *.c)
 
 TARGET = app
 
 all: run
 
+# normal
 compile: $(C_FILES)
 	$(CC) -I$(INCLUDE) $(C_FILES) -o $(TARGET)
 
-run_compile: $(C_FILES)
+exec: $(C_FILES)
 	./$(TARGET)
 
-compile_debug: $(C_FILES)
+# debug
+compiled: $(C_FILES)
 	$(CC) -I$(INCLUDE) $(C_FILES) -o $(TARGET) -g
 
-run_debug: $(C_FILES)
+execd: $(C_FILES)
 	gdb $(TARGET)
 
-run: compile run_compile
-rund: compile_debug run_debug
-
+# general
 clean: $(TARGET)
-	rm $(TARGET)
+	rm -rf .cache $(TARGET)
+
+run: compile exec clean
+rund: compiled execd clean

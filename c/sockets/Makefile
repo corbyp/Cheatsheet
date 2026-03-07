@@ -1,27 +1,29 @@
 SRC = src/
-INCLUDE = ./include
+INCLUDE = include/
 
-C_FILES = $(addprefix $(SRC), main.c)
+C_FILES = $(addprefix $(SRC), *.c)
 
 TARGET = app
 
 all: run
 
+# normal
 compile: $(C_FILES)
 	$(CC) -I$(INCLUDE) $(C_FILES) -o $(TARGET)
 
-run_compile: $(C_FILES)
-	./$(TARGET) $(ARGS)
+exec: $(C_FILES)
+	./$(TARGET)
 
-run: compile run_compile
-
-compile_debug: $(C_FILES)
+# debug
+compiled: $(C_FILES)
 	$(CC) -I$(INCLUDE) $(C_FILES) -o $(TARGET) -g
 
-run_debug: $(C_FILES)
+execd: $(C_FILES)
 	gdb $(TARGET)
 
-debug: compile_debug run_debug
-
+# general
 clean: $(TARGET)
-	rm $(TARGET)
+	rm -rf .cache $(TARGET)
+
+run: compile exec clean
+rund: compiled execd clean
