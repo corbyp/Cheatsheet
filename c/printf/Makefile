@@ -1,7 +1,7 @@
 SRC = src/
 INCLUDE = include/
 
-C_FILES = $(addprefix $(SRC), main.c printf.c)
+C_FILES = $(addprefix $(SRC), *.c)
 
 TARGET = printf
 
@@ -22,5 +22,5 @@ run_debug: $(C_FILES)
 run: compile run_compile
 rund: compile_debug run_debug
 
-clean: $(TARGET)
-	rm $(TARGET)
+clean:
+	rm -rf .cache $(TARGET)
