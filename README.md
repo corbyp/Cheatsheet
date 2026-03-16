@@ -7,15 +7,7 @@ I often forget how certain things work in different programming languages. Inste
 ## Languages
 
 - **[C](c/)**
-  - **[Linked List](c/linked_list)**
-  - **[Double Linked List](c/double_linked_list)**
-  - **[Binary Search Tree](c/binary_search_tree)**
 - **[C++](cpp/)**
-
 - **[Python](python/)**
-
 - **[Java](java/)**
-
 - **[Assembly](asm/)**
-  - **[Basics](asm/basics)**
-  - **[Hello World](asm/hello_world)**

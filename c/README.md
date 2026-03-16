@@ -15,8 +15,8 @@
 
 - **[Binary Search Tree](./datastructures/binary_search_tree)**
 - **[Linked List](./datastructures/linked_list)**
-- **[Linked List](./datastructures/double_linked_list)**
-- **[Linked List](./datastructures/dynamic_array)**
+- **[Double Linked List](./datastructures/double_linked_list)**
+- **[Dynamic Array](./datastructures/dynamic_array)**
 
 # Memory layout
 
