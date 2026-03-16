@@ -1,6 +1,9 @@
+#include <signal.h>
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+
+volatile sig_atomic_t stop_flag = 1;
 
 void* behaviour1(void* arg) {
   while (1) {
@@ -8,29 +11,38 @@ void* behaviour1(void* arg) {
 
     switch (c) {
     case 'q':
+      printf("Here\n");
       return NULL;
     }
   }
 }
 
 void* behaviour2(void* arg) {
-  for (int i = 0; i < 10; ++i) {
-    sleep(1);
-    printf("%d\n", i);
+  int i = 0;
+  while (stop_flag) {
+    // sleep(1);
+    printf("%d\n", i++);
   }
 
   return NULL;
 }
 
 int main(void) {
-  pthread_t thread1;
-  pthread_t thread2;
-  
-  pthread_create(&thread1, NULL, behaviour1, NULL);
-  pthread_create(&thread2, NULL, behaviour2, NULL);
+  pthread_t io;
+  pthread_t threads[100];
 
-  pthread_join(thread1, NULL);
-  pthread_join(thread2, NULL);
+  printf("%d\n", getpid());
+  
+  pthread_create(&io, NULL, behaviour1, NULL);
+  for (int i = 0; i < 100; ++i) {
+    pthread_create(&threads[i], NULL, behaviour2, NULL);
+  }
+
+  pthread_join(io, NULL);
+  stop_flag = 0;
+  for (int i = 0; i < 100; ++i) {
+    pthread_join(threads[i], NULL);
+  }
 
   return 0;
 }

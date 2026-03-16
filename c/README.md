@@ -2,8 +2,21 @@
 
 # Projects
 
-- **[Binary Search Tree](./binary_search_tree)**
-- **[Linked List](./linked_list)**
+## Data structures
+
+### Generic api
+
+    - add
+    - remove
+    - reverse
+    - get
+    - contains
+    - insert
+
+- **[Binary Search Tree](./datastructures/binary_search_tree)**
+- **[Linked List](./datastructures/linked_list)**
+- **[Linked List](./datastructures/double_linked_list)**
+- **[Linked List](./datastructures/dynamic_array)**
 
 # Memory layout
 

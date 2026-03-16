@@ -6,12 +6,12 @@ int main(void) {
   for (int i = 0; i < 20; ++i) {
     dll_add(&list, i);
   }
-  
+
   dll_print2(&list);
 
   dll_clear(&list);
-  
-  dll_print(&list);
 
+  dll_print(&list);
+  
   return 0;
 }
