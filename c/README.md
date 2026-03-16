@@ -7,11 +7,16 @@
 ### Generic api
 
     - add
-    - remove
+    - delete
     - reverse
     - get
     - contains
     - insert
+    - print
+    - clear
+
+    - init
+    - deconstruct
 
 - **[Binary Search Tree](./datastructures/binary_search_tree)**
 - **[Linked List](./datastructures/linked_list)**

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 void add(List *l, int val) {
   if (l->size + 1 >= l->cap) {
     int *ptr = reallocarray(l->ptr, l->cap * 2, sizeof(int));
@@ -32,7 +33,7 @@ void print(List *l) {
   printf("%d], c: %d, s: %d\n", l->ptr[l->size - 1], l->cap, l->size);
 }
 
-List *list(void) {
+List *init(void) {
   List *l = calloc(1, sizeof(List));
   if (!l) {
     perror("Could not alloc list!\n");
