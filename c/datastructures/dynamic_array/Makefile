@@ -16,7 +16,7 @@ exec: $(C_FILES)
 
 # debug
 compiled: $(C_FILES)
-	$(CC) -I$(INCLUDE) $(C_FILES) -o $(TARGET) -g
+	$(CC) -I$(INCLUDE) $(TEST_FILES) $(C_FILES) -o $(TARGET) -g
 
 execd: $(C_FILES)
 	gdb $(TARGET)
