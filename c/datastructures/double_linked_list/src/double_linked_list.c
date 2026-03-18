@@ -5,6 +5,13 @@
 
 // private helper functions
 
+typedef struct Node {
+  struct Node *prv;
+  struct Node *nxt;
+  int value;
+} Node;
+
+
 void check_list(const List *list) {
   if (!list) {
     perror("Trying to perform operation on empty list\n");
@@ -26,8 +33,8 @@ int add(List *list, const int value) {
 
   if (!list->root) {
     list->root = node;
-    ++list->size;
-    return list->size - 1;
+    ++list->_size;
+    return list->_size - 1;
   }
 
   Node *cur = list->root;
@@ -39,10 +46,10 @@ int add(List *list, const int value) {
     cur = cur->nxt;
   }
 
-  ++list->size;
+  ++list->_size;
   cur->nxt = node;
   cur->nxt->prv = cur;
-  return list->size - 1;
+  return list->_size - 1;
 }
 
 int delete(List *list, const int value) {
@@ -80,7 +87,7 @@ void clear(List *list) {
 
   Node *cur = list->root;
   list->root = NULL;
-  list->size = 0;
+  list->_size = 0;
   Node *temp;
 
   while (cur->nxt) {
@@ -135,8 +142,12 @@ List *construct(void) {
   list->print = print;
   list->print2 = print2;
 
-  list->size = 0;
+  list->_size = 0;
   list->root = NULL;
 
   return list;
+}
+
+void deconstruct(List *l) {
+  
 }

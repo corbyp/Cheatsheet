@@ -1,13 +1,7 @@
 #pragma once
 
-typedef struct Node {
-  struct Node *prv;
-  struct Node *nxt;
-  int value;
-} Node;
-
 typedef struct List {
-  int size;
+  int _size;
   struct Node *root;
 
   // adds element at the end of list and returns index
