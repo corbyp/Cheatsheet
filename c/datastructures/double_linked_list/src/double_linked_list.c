@@ -5,7 +5,7 @@
 
 // private helper functions
 
-void check_list(List *list) {
+void check_list(const List *list) {
   if (!list) {
     perror("Trying to perform operation on empty list\n");
     exit(1);
@@ -14,21 +14,7 @@ void check_list(List *list) {
 
 // public functions
 
-List *dll_create(void) {
-  List *list = malloc(sizeof(List));
-
-  if (!list) {
-    perror("Could not malloc for list\n");
-    exit(1);
-  }
-
-  list->size = 0;
-  list->root = NULL;
-
-  return list;
-}
-
-void dll_add(List *list, int value) {
+int add(List *list, const int value) {
   check_list(list);
 
   Node *node = malloc(sizeof(Node));
@@ -41,7 +27,7 @@ void dll_add(List *list, int value) {
   if (!list->root) {
     list->root = node;
     ++list->size;
-    return;
+    return list->size - 1;
   }
 
   Node *cur = list->root;
@@ -56,9 +42,10 @@ void dll_add(List *list, int value) {
   ++list->size;
   cur->nxt = node;
   cur->nxt->prv = cur;
+  return list->size - 1;
 }
 
-void dll_remove(List *list, int value) {
+int delete(List *list, const int value) {
   Node *cur = list->root;
   if (value == cur->value) {
     if (cur->nxt) {
@@ -70,7 +57,7 @@ void dll_remove(List *list, int value) {
     }
 
     free(cur);
-    return;
+    return 0;
   }
   Node *tmp;
 
@@ -80,13 +67,15 @@ void dll_remove(List *list, int value) {
       cur->nxt = cur->nxt->nxt;
       cur->nxt->prv = cur;
       free(tmp);
-      return;
+      return 0;
     }
     cur = cur->nxt;
   }
+
+  return 0;
 }
 
-void dll_clear(List *list) {
+void clear(List *list) {
   check_list(list);
 
   Node *cur = list->root;
@@ -101,7 +90,7 @@ void dll_clear(List *list) {
   }
 }
 
-void dll_print(List *list) {
+void print(const List *list) {
   check_list(list);
 
   if (!list->root) {
@@ -119,7 +108,7 @@ void dll_print(List *list) {
   printf("]\n");
 }
 
-void dll_print2(List *list) {
+void print2(const List *list) {
   check_list(list);
 
   if (!list->root)
@@ -130,4 +119,24 @@ void dll_print2(List *list) {
     printf("%p->%p(%d)->%p\n", cur->prv, cur, cur->value, cur->nxt);
     cur = cur->nxt;
   }
+}
+
+List *construct(void) {
+  List *list = malloc(sizeof(List));
+
+  if (!list) {
+    perror("Could not malloc for list\n");
+    exit(1);
+  }
+
+  list->add = add;
+  list->delete = delete;
+  list->clear = clear;
+  list->print = print;
+  list->print2 = print2;
+
+  list->size = 0;
+  list->root = NULL;
+
+  return list;
 }

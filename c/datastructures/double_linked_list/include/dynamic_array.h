@@ -1,14 +1,11 @@
 #pragma once
 
-typedef struct Node {
-  struct Node *prv;
-  struct Node *nxt;
-  int value;
-} Node;
-
 typedef struct List {
-  int size;
-  struct Node *root;
+  int _size;
+  // How many elements the list can hold until it needs to be
+  // expanded. On expansion: 2 * _cap, thus making _cap a power of 2.
+  int _cap;
+  int *_ptr;
 
   // adds element at the end of list and returns index
   int (*add)(struct List *, const int);
@@ -34,20 +31,10 @@ typedef struct List {
   // returns 0 if element not in list, otherwise 1
   int (*contains)(const struct List *, const int);
 
-  // Clears all elements from list
-  void (*clear)(struct List *);
-
   // prints list in format [1, 2, 3]
   void (*print)(const struct List *);
-
-  // prints list in format
-  // nil -> 1 -> 2
-  // 1 -> 2 -> nill
-  void (*print2)(const struct List *);
 
   // gives info about list: size, capacity
   void (*info)(const struct List *);
 } List;
 
-List *construct(void);
-void deconstruct(struct List *);
