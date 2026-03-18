@@ -117,6 +117,21 @@ void test_reverse(void) {
   TEST_ASSERT_EQUAL(4, list->_cap);
 }
 
+void test_get(void) {
+  TEST_ASSERT_EQUAL(2, list->get(list, 0));
+  TEST_ASSERT_EQUAL(9, list->get(list, 1));
+  TEST_ASSERT_EQUAL(13, list->get(list, 2));
+}
+
+void test_contains(void) {
+  TEST_ASSERT_EQUAL(1, list->contains(list, 2));
+  TEST_ASSERT_EQUAL(1, list->contains(list, 9));
+  TEST_ASSERT_EQUAL(1, list->contains(list, 13));
+  
+  TEST_ASSERT_EQUAL(0, list->contains(list, 1));
+  TEST_ASSERT_EQUAL(0, list->contains(list, 4));
+}
+
 int main(void) {
   UNITY_BEGIN();
 
@@ -126,6 +141,8 @@ int main(void) {
   RUN_TEST(test_delete);
   RUN_TEST(test_deletei);
   RUN_TEST(test_reverse);
+  RUN_TEST(test_get);
+  RUN_TEST(test_contains);
 
   return UNITY_END();
 }
