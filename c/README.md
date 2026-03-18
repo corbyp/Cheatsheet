@@ -6,17 +6,45 @@
 
 ### Generic api
 
-    - add
-    - delete
-    - reverse
-    - get
-    - contains
-    - insert
-    - print
-    - clear
+```C
+typedef struct List {
+  int size;
+  int cap;
+  int *ptr;
 
-    - init
-    - deconstruct
+  // adds element at the end of list and returns index
+  int (*add)(struct List *, const int);
+
+  // inserts element at specific index and returns index
+  void (*insert)(struct List *, const int, const int);
+
+  // deletes and returns element at the end of list
+  int (*pop)(struct List *);
+
+  // deletes and returns element at specific index
+  int (*delete)(struct List *, const int);
+
+  // reverses list
+  void (*reverse)(struct List *);
+
+  // gets element at specific index
+  int (*get)(const struct List *, const int);
+
+  // returns 0 if element not in list, otherwise 1
+  int (*contains)(const struct List *, const int);
+
+  // prints list in format [1, 2, 3]
+  void (*print)(const struct List *);
+
+  // gives info about list: size, capacity
+  void (*info)(const struct List *);
+
+  // frees all list pointers
+  void (*deconstruct)(struct List *);
+} List;
+
+List *construct(void);
+```
 
 - **[Binary Search Tree](./datastructures/binary_search_tree)**
 - **[Linked List](./datastructures/linked_list)**
