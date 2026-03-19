@@ -22,13 +22,13 @@ typedef struct List {
   int (*delete)(struct List *, const int);
 
   // deletes element at index and returns value
-  int (*deletei)(struct List *, const int);
+  int (*deletei)(struct List *, int);
 
   // reverses list
   void (*reverse)(struct List *);
 
   // gets element at specific index
-  int (*get)(const struct List *, const int);
+  int (*get)(const struct List *, int);
 
   // Finds element in list and returns index.
   // If not found returns -1.

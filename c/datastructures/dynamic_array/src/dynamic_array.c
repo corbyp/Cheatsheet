@@ -69,6 +69,11 @@ void insert(List *list, const int val, int idx) {
 }
 
 int pop(List *list) {
+  if (!list->_size) {
+    errno = ERANGE;
+    return -1;
+  }
+
   int val = list->_ptr[list->_size - 1];
   adjust(list, list->_size - 1);
 
@@ -76,16 +81,16 @@ int pop(List *list) {
 }
 
 int delete(List *list, const int val) {
-  int idx;
+  int idx = 0;
   for (idx = 0; idx < list->_size && list->_ptr[idx] != val; ++idx)
     ;
 
-  int temp = idx;
-
-  if (idx == list->_size) {
-    printf("Could not delete element %d, it does not exist!\n", val);
-    exit(1);
+  if (idx == list->_size || !list->_size) {
+    errno = ERANGE;
+    return -1;
   }
+  
+  int temp = idx;
 
   while (idx < list->_size - 1) {
     list->_ptr[idx] = list->_ptr[idx + 1];
@@ -97,7 +102,13 @@ int delete(List *list, const int val) {
   return temp;
 }
 
-int deletei(List *list, const int idx) {
+int deletei(List *list, int idx) {
+  if (idx < 0)
+    idx = list->_size - idx;
+
+  if (!check_index(list, idx))
+    return -1;
+
   int val = list->get(list, idx);
 
   int i = idx;
@@ -112,6 +123,9 @@ int deletei(List *list, const int idx) {
 }
 
 void reverse(List *list) {
+  if (list->_size < 2)
+    return;
+
   int temp;
   for (int i = 0; i < list->_size / 2; ++i) {
     temp = list->_ptr[i];
@@ -120,12 +134,23 @@ void reverse(List *list) {
   }
 }
 
-int get(const List *list, const int idx) {
-  if (idx < 0 || idx >= list->_size) {
-    printf("Index %d out of bounds!\n", idx);
-    exit(1);
-  }
+int get(const List *list, int idx) {
+  if (idx < 0)
+    idx = list->_size - idx;
+
+  if (!check_index(list, idx))
+    return -1;
+
   return list->_ptr[idx];
+}
+
+int find(const List *list, int val) {
+  for (int i = 0; i < list->_size || list->_ptr[i] != val; ++i) {
+    if (list->_ptr[i] == val)
+      return i;
+  }
+
+  return -1;
 }
 
 bool contains(const List *list, const int val) {
@@ -176,6 +201,7 @@ List *construct(void) {
   list->deletei = deletei;
   list->reverse = reverse;
   list->get = get;
+  list->find = find;
   list->contains = contains;
   list->clear = clear;
   list->print = print;

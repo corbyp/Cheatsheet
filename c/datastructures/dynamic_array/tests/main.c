@@ -11,6 +11,7 @@ void setUp(void) {
   list->add(list, 2);
   list->add(list, 9);
   list->add(list, 13);
+  errno = 0;
 }
 
 void tearDown(void) { deconstruct(list); }
@@ -22,6 +23,7 @@ void test_add(void) {
   for (int i = 3; i < 32768; ++i) {
     TEST_ASSERT_EQUAL(i, list->add(list, i));
     TEST_ASSERT_EQUAL(i + 1, list->_size);
+    TEST_ASSERT_EQUAL(0, errno);
   }
 
   for (int i = 3; i < 32768; ++i) {
@@ -37,6 +39,7 @@ void test_add(void) {
 
 void test_insert(void) {
   list->insert(list, 420, 2);
+  TEST_ASSERT_EQUAL(0, errno);
   TEST_ASSERT_EQUAL(2, list->get(list, 0));
   TEST_ASSERT_EQUAL(9, list->get(list, 1));
   TEST_ASSERT_EQUAL(420, list->get(list, 2));
@@ -46,6 +49,7 @@ void test_insert(void) {
   TEST_ASSERT_EQUAL(8, list->_cap);
 
   list->insert(list, 1337, 1);
+  TEST_ASSERT_EQUAL(0, errno);
   TEST_ASSERT_EQUAL(2, list->get(list, 0));
   TEST_ASSERT_EQUAL(1337, list->get(list, 1));
   TEST_ASSERT_EQUAL(9, list->get(list, 2));
@@ -76,6 +80,9 @@ void test_pop(void) {
   TEST_ASSERT_EQUAL(2, list->pop(list));
   TEST_ASSERT_EQUAL(0, list->_size);
   TEST_ASSERT_EQUAL(1, list->_cap);
+
+  TEST_ASSERT_EQUAL(-1, list->pop(list));
+  TEST_ASSERT_EQUAL(ERANGE, errno);
 }
 
 void test_delete(void) {
@@ -96,6 +103,9 @@ void test_delete(void) {
 
   TEST_ASSERT_EQUAL(0, list->_size);
   TEST_ASSERT_EQUAL(1, list->_cap);
+
+  TEST_ASSERT_EQUAL(-1, list->delete(list, 0));
+  TEST_ASSERT_EQUAL(ERANGE, errno);
 }
 
 void test_deletei(void) {
@@ -116,6 +126,9 @@ void test_deletei(void) {
 
   TEST_ASSERT_EQUAL(0, list->_size);
   TEST_ASSERT_EQUAL(1, list->_cap);
+  
+  TEST_ASSERT_EQUAL(-1, list->deletei(list, 0));
+  TEST_ASSERT_EQUAL(ERANGE, errno);
 }
 
 void test_reverse(void) {
@@ -141,6 +154,16 @@ void test_get(void) {
   TEST_ASSERT_EQUAL(2, list->get(list, 0));
   TEST_ASSERT_EQUAL(9, list->get(list, 1));
   TEST_ASSERT_EQUAL(13, list->get(list, 2));
+
+  TEST_ASSERT_EQUAL(-1, list->get(list, 420));
+  TEST_ASSERT_EQUAL(ERANGE, errno);
+}
+
+void test_find(void) {
+  TEST_ASSERT_EQUAL(0, list->find(list, 2));
+  TEST_ASSERT_EQUAL(1, list->find(list, 9));
+  TEST_ASSERT_EQUAL(2, list->find(list, 13));
+  TEST_ASSERT_EQUAL(-1, list->find(list, 420));
 }
 
 void test_contains(void) {
@@ -174,6 +197,7 @@ int main(void) {
   RUN_TEST(test_deletei);
   RUN_TEST(test_reverse);
   RUN_TEST(test_get);
+  RUN_TEST(test_find);
   RUN_TEST(test_contains);
   RUN_TEST(test_clear);
 
