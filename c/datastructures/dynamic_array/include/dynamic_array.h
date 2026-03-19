@@ -30,6 +30,10 @@ typedef struct List {
   // gets element at specific index
   int (*get)(const struct List *, const int);
 
+  // Finds element in list and returns index.
+  // If not found returns -1.
+  int (*find)(const struct List *, const int);
+
   // returns 0 if element not in list, otherwise 1
   bool (*contains)(const struct List *, const int);
 
