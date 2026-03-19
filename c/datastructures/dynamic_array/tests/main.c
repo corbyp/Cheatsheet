@@ -2,6 +2,8 @@
 #include "unity.h"
 #include "unity_internals.h"
 
+#include <errno.h>
+
 List *list;
 
 void setUp(void) {
@@ -10,9 +12,8 @@ void setUp(void) {
   list->add(list, 9);
   list->add(list, 13);
 }
-void tearDown(void) {
-  deconstruct(list);
-}
+
+void tearDown(void) { deconstruct(list); }
 
 void test_add(void) {
   TEST_ASSERT_EQUAL(3, list->_size);
@@ -35,7 +36,7 @@ void test_add(void) {
 }
 
 void test_insert(void) {
-  TEST_ASSERT_EQUAL(2, list->insert(list, 420, 2));
+  list->insert(list, 420, 2);
   TEST_ASSERT_EQUAL(2, list->get(list, 0));
   TEST_ASSERT_EQUAL(9, list->get(list, 1));
   TEST_ASSERT_EQUAL(420, list->get(list, 2));
@@ -44,7 +45,7 @@ void test_insert(void) {
   TEST_ASSERT_EQUAL(4, list->_size);
   TEST_ASSERT_EQUAL(8, list->_cap);
 
-  TEST_ASSERT_EQUAL(1, list->insert(list, 1337, 1));
+  list->insert(list, 1337, 1);
   TEST_ASSERT_EQUAL(2, list->get(list, 0));
   TEST_ASSERT_EQUAL(1337, list->get(list, 1));
   TEST_ASSERT_EQUAL(9, list->get(list, 2));
@@ -53,6 +54,9 @@ void test_insert(void) {
 
   TEST_ASSERT_EQUAL(5, list->_size);
   TEST_ASSERT_EQUAL(8, list->_cap);
+
+  list->insert(list, 69, 5);
+  TEST_ASSERT_EQUAL(ERANGE, errno);
 }
 
 void test_pop(void) {

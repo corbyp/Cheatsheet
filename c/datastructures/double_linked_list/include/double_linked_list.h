@@ -1,8 +1,10 @@
 #pragma once
 
+#include <stdbool.h>
+
 typedef struct List {
   int _size;
-  struct Node *root;
+  struct Node *_root;
 
   // adds element at the end of list and returns index
   int (*add)(struct List *, const int);
@@ -26,17 +28,16 @@ typedef struct List {
   int (*get)(const struct List *, const int);
 
   // returns 0 if element not in list, otherwise 1
-  int (*contains)(const struct List *, const int);
+  bool (*contains)(const struct List *, const int);
 
-  // Clears all elements from list
+  // clears all elements of list
   void (*clear)(struct List *);
 
   // prints list in format [1, 2, 3]
   void (*print)(const struct List *);
 
-  // prints list in format
-  // nil -> 1 -> 2
-  // 1 -> 2 -> nill
+  // prints list in format [1, 2, 3, 0, 0]
+  // which also prints all values of current capacity
   void (*print2)(const struct List *);
 
   // gives info about list: size, capacity

@@ -13,7 +13,7 @@ typedef struct List {
   int (*add)(struct List *, const int);
 
   // inserts element at specific index and returns index
-  int (*insert)(struct List *, const int, const int);
+  void (*insert)(struct List *, const int, int);
 
   // deletes and returns last element of list
   int (*pop)(struct List *);

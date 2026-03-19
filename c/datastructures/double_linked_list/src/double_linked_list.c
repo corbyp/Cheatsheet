@@ -31,13 +31,13 @@ int add(List *list, const int value) {
   }
   node->value = value;
 
-  if (!list->root) {
-    list->root = node;
+  if (!list->_root) {
+    list->_root = node;
     ++list->_size;
     return list->_size - 1;
   }
 
-  Node *cur = list->root;
+  Node *cur = list->_root;
 
   while (true) {
     if (!cur->nxt) {
@@ -53,14 +53,14 @@ int add(List *list, const int value) {
 }
 
 int delete(List *list, const int value) {
-  Node *cur = list->root;
+  Node *cur = list->_root;
   if (value == cur->value) {
     if (cur->nxt) {
       cur->prv = NULL;
-      list->root = cur->nxt;
-      list->root->prv = NULL;
+      list->_root = cur->nxt;
+      list->_root->prv = NULL;
     } else {
-      list->root = NULL;
+      list->_root = NULL;
     }
 
     free(cur);
@@ -82,11 +82,21 @@ int delete(List *list, const int value) {
   return 0;
 }
 
+int get(const struct List* list, const int idx) {
+  Node *cur = list->_root;
+  int i = 0;
+  while (cur != NULL && idx != i++) {
+    cur = cur->nxt;
+  }
+
+  return cur->value;
+}
+
 void clear(List *list) {
   check_list(list);
 
-  Node *cur = list->root;
-  list->root = NULL;
+  Node *cur = list->_root;
+  list->_root = NULL;
   list->_size = 0;
   Node *temp;
 
@@ -100,13 +110,13 @@ void clear(List *list) {
 void print(const List *list) {
   check_list(list);
 
-  if (!list->root) {
+  if (!list->_root) {
     printf("[]\n");
     return;
   }
 
   printf("[");
-  Node *cur = list->root;
+  Node *cur = list->_root;
   while (cur->nxt) {
     printf("%d, ", cur->value);
     cur = cur->nxt;
@@ -118,10 +128,10 @@ void print(const List *list) {
 void print2(const List *list) {
   check_list(list);
 
-  if (!list->root)
+  if (!list->_root)
     return;
 
-  Node *cur = list->root;
+  Node *cur = list->_root;
   while (cur) {
     printf("%p->%p(%d)->%p\n", cur->prv, cur, cur->value, cur->nxt);
     cur = cur->nxt;
@@ -138,16 +148,17 @@ List *construct(void) {
 
   list->add = add;
   list->delete = delete;
+  list->get = get;
   list->clear = clear;
   list->print = print;
   list->print2 = print2;
 
   list->_size = 0;
-  list->root = NULL;
+  list->_root = NULL;
 
   return list;
 }
 
 void deconstruct(List *l) {
-  
+  l->_size = 0;
 }
