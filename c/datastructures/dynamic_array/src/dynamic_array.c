@@ -1,39 +1,35 @@
 #include "dynamic_array.h"
 
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+// private helper functions
+
 void adjust(List *l, const int new_size) {
-  if (new_size == 0) {
-    int *_ptr = reallocarray(l->_ptr, 1, sizeof(int));
-    if (!_ptr) {
-      perror("Could not realloc array with new size 0");
-      exit(1);
-    }
-    l->_size = 0;
-    l->_cap = 1;
-  } else if (new_size >= l->_cap) {
-    int *_ptr = reallocarray(l->_ptr, l->_cap * 2, sizeof(int));
-    if (!_ptr) {
-      perror("Could not realloc array on add\n");
-      exit(1);
-    }
-    l->_ptr = _ptr;
+  if (new_size >= l->_cap) {
     l->_cap *= 2;
-  } else if (new_size <= l->_cap / 2) {
-    int *_ptr = reallocarray(l->_ptr, l->_cap / 2, sizeof(int));
-    if (!_ptr) {
-      perror("Could not realloc array on delete\n");
+    l->_ptr = reallocarray(l->_ptr, l->_cap, sizeof(int));
+    if (!l->_ptr) {
+      perror("Could not realloc array on add");
       exit(1);
     }
-    l->_ptr = _ptr;
+  } else if (new_size <= l->_cap / 2) {
     l->_cap /= 2;
+    if (new_size == 0)
+      l->_cap = 1;
+    l->_ptr = reallocarray(l->_ptr, l->_cap, sizeof(int));
+    if (!l->_ptr) {
+      perror("Could not realloc array on delete");
+      exit(1);
+    }
   }
+  l->_size = new_size;
 }
 
+// public list functions
+
 int add(List *l, const int val) {
-  adjust(l, ++l->_size);
+  adjust(l, l->_size + 1);
 
   l->_ptr[l->_size - 1] = val;
   // Could instead call insert with l->_size as index, but
@@ -48,7 +44,7 @@ int insert(List *l, const int val, const int idx) {
     printf("Index %d out of bounds!\n", idx);
     exit(1);
   }
-  adjust(l, ++l->_size);
+  adjust(l, l->_size + 1);
   int cur = l->_size;
 
   while (cur > idx) {
@@ -62,8 +58,8 @@ int insert(List *l, const int val, const int idx) {
 }
 
 int pop(List *l) {
-  int val = l->_ptr[--l->_size];
-  adjust(l, l->_size);
+  int val = l->_ptr[l->_size - 1];
+  adjust(l, l->_size - 1);
 
   return val;
 }
@@ -85,7 +81,7 @@ int delete(List *l, const int val) {
     ++idx;
   }
 
-  adjust(l, --l->_size);
+  adjust(l, l->_size - 1);
 
   return temp;
 }
@@ -94,12 +90,12 @@ int deletei(List *l, const int idx) {
   int val = l->get(l, idx);
 
   int i = idx;
-  while (i < l->_size) {
+  while (i < l->_size - 1) {
     l->_ptr[i] = l->_ptr[i + 1];
     ++i;
   }
 
-  adjust(l, --l->_size);
+  adjust(l, l->_size - 1);
 
   return val;
 }
@@ -121,7 +117,7 @@ int get(const List *l, const int idx) {
   return l->_ptr[idx];
 }
 
-int contains(const List *l, const int val) {
+bool contains(const List *l, const int val) {
   for (int i = 0; i < l->_size; ++i) {
     if (l->_ptr[i] == val)
       return 1;
@@ -143,13 +139,16 @@ void print(const List *l) {
   printf("%d]\n", l->_ptr[l->_size - 1]);
 }
 
-void info(const List *l) {
-  printf("Capacity: %d, Size: %d\n", l->_cap, l->_size);
+void print2(const List *l) {
+  printf("[");
+  for (int i = 0; i < l->_cap - 1; ++i) {
+    printf("%d, ", l->_ptr[i]);
+  }
+  printf("%d]\n", l->_ptr[l->_cap - 1]);
 }
 
-void deconstruct(List *l) {
-  free(l->_ptr);
-  // free(l);
+void info(const List *l) {
+  printf("Capacity: %d, Size: %d\n", l->_cap, l->_size);
 }
 
 List *construct(void) {
@@ -167,17 +166,23 @@ List *construct(void) {
   l->reverse = reverse;
   l->get = get;
   l->contains = contains;
+  l->clear = clear;
   l->print = print;
+  l->print2 = print2;
   l->info = info;
 
-  int *_ptr = calloc(1, sizeof(int));
-  if (!_ptr) {
+  l->_ptr = calloc(1, sizeof(int));
+  if (!l->_ptr) {
     perror("Could not alloc array");
     exit(1);
   }
 
-  l->_ptr = _ptr;
   l->_cap = 1;
 
   return l;
+}
+
+void deconstruct(List *l) {
+  free(l->_ptr);
+  free(l);
 }

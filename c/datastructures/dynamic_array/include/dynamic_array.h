@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 typedef struct List {
   int _size;
   // How many elements the list can hold until it needs to be
@@ -29,10 +31,17 @@ typedef struct List {
   int (*get)(const struct List *, const int);
 
   // returns 0 if element not in list, otherwise 1
-  int (*contains)(const struct List *, const int);
+  bool (*contains)(const struct List *, const int);
+
+  // clears all elements of list
+  void (*clear)(struct List *);
 
   // prints list in format [1, 2, 3]
   void (*print)(const struct List *);
+
+  // prints list in format [1, 2, 3, 0, 0]
+  // which also prints all values of current capacity
+  void (*print2)(const struct List *);
 
   // gives info about list: size, capacity
   void (*info)(const struct List *);
