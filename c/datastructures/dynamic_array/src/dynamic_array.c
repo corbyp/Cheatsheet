@@ -1,9 +1,10 @@
 #include "dynamic_array.h"
 
+#include <asm-generic/errno-base.h>
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 
 // private helper functions
 
@@ -28,10 +29,20 @@ void adjust(List *list, const int new_size) {
   list->_size = new_size;
 }
 
-bool check_index(const List* list, int idx) {
-  if (idx < 0 || idx >= list->_size) {
-    errno = ERANGE;
+bool error_handling(const List *list, int *index) {
+  if (!list || !list->_ptr) {
+    errno = EINVAL;
     return 0;
+  }
+
+  if (index) {
+    if (*index < 0)
+      *index = list->_size - *index;
+
+    if (*index < 0 || *index >= list->_size) {
+      errno = ERANGE;
+      return 0;
+    }
   }
 
   return 1;
@@ -40,21 +51,18 @@ bool check_index(const List* list, int idx) {
 // public list functions
 
 int add(List *list, const int val) {
+  if (!error_handling(list, NULL))
+    return -1;
+
   adjust(list, list->_size + 1);
 
   list->_ptr[list->_size - 1] = val;
-  // Could instead call insert with l->_size as index, but
-  // that would mean one unnecessary if check in while and
-  // thus this implementation is more performant
 
   return list->_size - 1;
 }
 
 void insert(List *list, const int val, int idx) {
-  if (idx < 0)
-    idx = list->_size - idx;
-
-  if (!check_index(list, idx))
+  if (!error_handling(list, &idx))
     return;
 
   adjust(list, list->_size + 1);
@@ -69,6 +77,9 @@ void insert(List *list, const int val, int idx) {
 }
 
 int pop(List *list) {
+  if (!error_handling(list, NULL))
+    return -1;
+
   if (!list->_size) {
     errno = ERANGE;
     return -1;
@@ -81,15 +92,17 @@ int pop(List *list) {
 }
 
 int delete(List *list, const int val) {
+  if (!error_handling(list, NULL))
+    return -1;
+
   int idx = 0;
   for (idx = 0; idx < list->_size && list->_ptr[idx] != val; ++idx)
     ;
 
-  if (idx == list->_size || !list->_size) {
-    errno = ERANGE;
+  if (idx == list->_size) {
     return -1;
   }
-  
+
   int temp = idx;
 
   while (idx < list->_size - 1) {
@@ -103,10 +116,7 @@ int delete(List *list, const int val) {
 }
 
 int deletei(List *list, int idx) {
-  if (idx < 0)
-    idx = list->_size - idx;
-
-  if (!check_index(list, idx))
+  if (!error_handling(list, &idx))
     return -1;
 
   int val = list->get(list, idx);
@@ -123,6 +133,9 @@ int deletei(List *list, int idx) {
 }
 
 void reverse(List *list) {
+  if (!error_handling(list, NULL))
+    return;
+
   if (list->_size < 2)
     return;
 
@@ -135,16 +148,16 @@ void reverse(List *list) {
 }
 
 int get(const List *list, int idx) {
-  if (idx < 0)
-    idx = list->_size - idx;
-
-  if (!check_index(list, idx))
+  if (!error_handling(list, &idx))
     return -1;
 
   return list->_ptr[idx];
 }
 
 int find(const List *list, int val) {
+  if (!error_handling(list, NULL))
+    return -1;
+
   for (int i = 0; i < list->_size || list->_ptr[i] != val; ++i) {
     if (list->_ptr[i] == val)
       return i;
@@ -154,36 +167,53 @@ int find(const List *list, int val) {
 }
 
 bool contains(const List *list, const int val) {
-  for (int i = 0; i < list->_size; ++i) {
+  if (!error_handling(list, NULL))
+    return 0;
+
+  for (int i = 0; i < list->_size; ++i)
     if (list->_ptr[i] == val)
       return 1;
-  }
+
   return 0;
 }
 
-void clear(List *list) { adjust(list, 0); }
+void clear(List *list) {
+  if (!error_handling(list, NULL))
+    return;
+
+  adjust(list, 0);
+}
 
 void print(const List *list) {
-  if (list->_size == 0) {
+  if (!error_handling(list, NULL))
+    return;
+
+  if (!list->_size) {
     printf("[]\n");
     return;
   }
   printf("[");
-  for (int i = 0; i < list->_size - 1; ++i) {
+  for (int i = 0; i < list->_size - 1; ++i)
     printf("%d, ", list->_ptr[i]);
-  }
+
   printf("%d]\n", list->_ptr[list->_size - 1]);
 }
 
 void print2(const List *list) {
+  if (!error_handling(list, NULL))
+    return;
+
   printf("[");
-  for (int i = 0; i < list->_cap - 1; ++i) {
+  for (int i = 0; i < list->_cap - 1; ++i)
     printf("%d, ", list->_ptr[i]);
-  }
+  
   printf("%d]\n", list->_ptr[list->_cap - 1]);
 }
 
 void info(const List *list) {
+  if (!error_handling(list, NULL))
+    return;
+
   printf("Capacity: %d, Size: %d\n", list->_cap, list->_size);
 }
 
@@ -194,6 +224,7 @@ List *construct(void) {
     exit(1);
   }
 
+  // bind all functions to its struct pointer
   list->add = add;
   list->insert = insert;
   list->pop = pop;
@@ -220,6 +251,8 @@ List *construct(void) {
 }
 
 void deconstruct(List *list) {
+  if (!error_handling(list, NULL))
+    return;
   free(list->_ptr);
   free(list);
 }

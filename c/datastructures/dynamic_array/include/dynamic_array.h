@@ -1,6 +1,29 @@
+/**
+ * @file dynamic_array.h
+ * @brief A dynamic integer list with automatic capacity doubling.
+ *
+ * Capacity starts at 1 and doubles on each expansion, keeping it a
+ * power of 2. Functions are exposed as function pointers on the struct
+ * itself and should be called with the list itself as the first argument.
+ * All operations that can fail set errno on error.
+ *
+ * @note  All functions fail gracefully if passed a NULL pointer by
+ *        returning early and writing EINVAL to errno. If a function has
+ *        a return value but no errno documentation, refer to this note.
+ *
+ * Example:
+ * @code
+ *   List *l = construct();
+ *   l->add(l, 10);
+ *   l->add(l, 20);
+ *   l->print(l);   // [10, 20]
+ *   deconstruct(l);
+ * @endcode
+ * Do not access underscore-prefixed field directly.
+ */
 #pragma once
 
-#include <stdbool.h>
+ #include <stdbool.h>
 
 typedef struct List {
   int _size;
@@ -9,47 +32,170 @@ typedef struct List {
   int _cap;
   int *_ptr;
 
-  // adds element at the end of list and returns index
-  int (*add)(struct List *, const int);
+  /**
+   * @brief Adds element to end of list.
+   *
+   * If size == capacity, list is expanded to 2 * capacity
+   * by reallocating memory to that exact size.
+   * Worst-case O(n) operation.
+   *
+   * @param[in,out] list  Pointer to an initialised List.
+   * @param[in]     value Value to be added.
+   * @return index of element (size - 1) or -1.
+   */
+  int (*add)(struct List *list, const int value);
 
-  // inserts element at specific index and returns index
-  void (*insert)(struct List *, const int, int);
+  /**
+   * @brief Inserts element at specific index.
+   *
+   * Can only insert between 0 and size - 1.
+   * If index out of bounds, sets errno to ERANGE.
+   * Worst-case O(n) operation.
+   *
+   * @param[in,out] list  Pointer to an initialised List.
+   * @param[in]     value Value that is to be inserted.
+   * @param[in]     index Index where to insert value.
+   */
+  void (*insert)(struct List *list, const int value, int index);
 
-  // deletes and returns last element of list
-  int (*pop)(struct List *);
+  /**
+   * @brief Removes element at last position and returns its value.
+   *
+   * If no elements in list, set errno to ERANGE and returns -1.
+   * Worst-case O(n) operation.
+   *
+   * @param[in,out] list Pointer to an initialised List.
+   * @return value of removed element or -1.
+   */
+  int (*pop)(struct List *list);
 
-  // deletes first instance of element and returns index
-  int (*delete)(struct List *, const int);
+  /**
+   * @brief Removes given value and returns index.
+   *
+   * If value not present in list, returns -1.
+   * Worst-case O(n) operation.
+   *
+   * @param[in,out] list  Pointer to an initialised List.
+   * @param[in]     value Value to remove.
+   * @return index of removed value or -1.
+   */
+  int (*delete)(struct List *list, const int value);
 
-  // deletes element at index and returns value
-  int (*deletei)(struct List *, int);
+  /**
+   * @brief Removes element at given index and returns value.
+   *
+   * If index is out of bounds, sets errno to ERANGE and returns -1.
+   * Worst-case O(n) operation.
+   *
+   * @param[in,out] list  Pointer to an initialised List.
+   * @param[in]     index Index to remove.
+   * @return value that was deleted or -1.
+   */
+  int (*deletei)(struct List *list, int index);
 
-  // reverses list
-  void (*reverse)(struct List *);
+  /**
+   * @brief Reverses list.
+   *
+   * Worst-case O(n/2) operation.
+   *
+   * @param[in,out] list Pointer to an initialised List.
+   */
+  void (*reverse)(struct List *list);
 
-  // gets element at specific index
-  int (*get)(const struct List *, int);
+  /**
+   * @brief Returns value at given index.
+   *
+   * If index not within bounds, sets errno to ERANGE and returns -1.
+   * Worst-case O(1) operation.
+   *
+   * @param[in] list  Pointer to an initialised List.
+   * @param[in] index Index to be returned.
+   * @return value of index if present or -1.
+   */
+  int (*get)(const struct List *list, int index);
 
-  // Finds element in list and returns index.
-  // If not found returns -1.
-  int (*find)(const struct List *, const int);
+  /**
+   * @brief Finds index of value.
+   *
+   * Uses linear search since sort is not a requirement.
+   * Worst-case O(n) operation.
+   *
+   * @param[in] list  Pointer to an initialised List.
+   * @param[in] value Value to be found.
+   * @return index of value if present, otherwise -1.
+   */
+  int (*find)(const struct List *list, const int value);
 
-  // returns 0 if element not in list, otherwise 1
-  bool (*contains)(const struct List *, const int);
+  /**
+   * @brief Checks if element is contained in list.
+   *
+   * Uses linear search since sort is not a requirement.
+   * Worst-case O(n) operation.
+   *
+   * @param[in] list  Pointer to an initialised List.
+   * @param[in] value Value to be checked.
+   * @return true if value is present in list, otherwise false.
+   */
+  bool (*contains)(const struct List *list, const int value);
 
-  // clears all elements of list
-  void (*clear)(struct List *);
+  /**
+   * @brief Removes all elements of list.
+   *
+   * Worst-case O(1) operation.
+   *
+   * Sets size to 0, capacity to 1 and reallocates
+   * the memory accordingly.
+   *
+   * @param[in,out] list Pointer to an initialised List.
+   */
+  void (*clear)(struct List *list);
 
-  // prints list in format [1, 2, 3]
-  void (*print)(const struct List *);
+  /**
+   * @brief Prints list in format [1, 2, 3]
+   *
+   * Only prints elements within size of list.
+   * O(n) operation.
+   *
+   * @param[in] list Pointer to an initialised List.
+   */
+  void (*print)(const struct List *list);
 
-  // prints list in format [1, 2, 3, 0, 0]
-  // which also prints all values of current capacity
-  void (*print2)(const struct List *);
+  /**
+   * @brief Prints list in format [1, 2, 3, 0, 0]
+   *
+   * Also prints uninitialised values that are not within
+   * size but within capacity.
+   * O(n) operation.
+   *
+   * @param[in] list Pointer to an initialised List.
+   */
+  void (*print2)(const struct List *list);
 
-  // gives info about list: size, capacity
-  void (*info)(const struct List *);
+  /**
+   * @brief Prints size and capacity of list.
+   *
+   * O(1) operation.
+   *
+   * @param[in] list Pointer to an initialised List.
+   */
+  void (*info)(const struct List *list);
 } List;
 
+/**
+ * @brief Initialise the List with capacity 1.
+ *
+ * Allocates internal storage and binds functions. Must be paired with a call
+ * to deconstruct() to avoid memory leaks.
+ *
+ * @return a pointer to a list initialised on the heap.
+ */
 List *construct(void);
-void deconstruct(struct List *);
+
+/**
+ * @brief Release all resources held by the list.
+ *
+ * After this call, @p s must not be used unless re-initialised.
+ *
+ * @param[out] list Pointer to an initialised List.
+ */
+void deconstruct(struct List *list);
