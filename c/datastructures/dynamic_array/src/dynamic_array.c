@@ -50,30 +50,46 @@ bool error_handling(const List *list, int *index) {
 
 // public list functions
 
-int add(List *list, const int val) {
+int size(const List *list) {
+  if (!error_handling(list, NULL)) {
+    return -1;
+  }
+
+  return list->_size;
+}
+
+int cap(const List *list) {
+  if (!error_handling(list, NULL)) {
+    return -1;
+  }
+
+  return list->_cap;
+}
+
+int add(List *list, const int value) {
   if (!error_handling(list, NULL))
     return -1;
 
   adjust(list, list->_size + 1);
 
-  list->_ptr[list->_size - 1] = val;
+  list->_ptr[list->_size - 1] = value;
 
   return list->_size - 1;
 }
 
-void insert(List *list, const int val, int idx) {
-  if (!error_handling(list, &idx))
+void insert(List *list, const int value, int index) {
+  if (!error_handling(list, &index))
     return;
 
   adjust(list, list->_size + 1);
   int cur = list->_size;
 
-  while (cur > idx) {
+  while (cur > index) {
     list->_ptr[cur] = list->_ptr[cur - 1];
     --cur;
   }
 
-  list->_ptr[idx] = val;
+  list->_ptr[index] = value;
 }
 
 int pop(List *list) {
@@ -85,29 +101,29 @@ int pop(List *list) {
     return -1;
   }
 
-  int val = list->_ptr[list->_size - 1];
+  int value = list->_ptr[list->_size - 1];
   adjust(list, list->_size - 1);
 
-  return val;
+  return value;
 }
 
-int delete(List *list, const int val) {
+int delete(List *list, const int value) {
   if (!error_handling(list, NULL))
     return -1;
 
-  int idx = 0;
-  for (idx = 0; idx < list->_size && list->_ptr[idx] != val; ++idx)
+  int index = 0;
+  for (index = 0; index < list->_size && list->_ptr[index] != value; ++index)
     ;
 
-  if (idx == list->_size) {
+  if (index == list->_size) {
     return -1;
   }
 
-  int temp = idx;
+  int temp = index;
 
-  while (idx < list->_size - 1) {
-    list->_ptr[idx] = list->_ptr[idx + 1];
-    ++idx;
+  while (index < list->_size - 1) {
+    list->_ptr[index] = list->_ptr[index + 1];
+    ++index;
   }
 
   adjust(list, list->_size - 1);
@@ -115,13 +131,13 @@ int delete(List *list, const int val) {
   return temp;
 }
 
-int deletei(List *list, int idx) {
-  if (!error_handling(list, &idx))
+int deletei(List *list, int index) {
+  if (!error_handling(list, &index))
     return -1;
 
-  int val = list->get(list, idx);
+  int value = list->get(list, index);
 
-  int i = idx;
+  int i = index;
   while (i < list->_size - 1) {
     list->_ptr[i] = list->_ptr[i + 1];
     ++i;
@@ -129,7 +145,7 @@ int deletei(List *list, int idx) {
 
   adjust(list, list->_size - 1);
 
-  return val;
+  return value;
 }
 
 void reverse(List *list) {
@@ -147,31 +163,31 @@ void reverse(List *list) {
   }
 }
 
-int get(const List *list, int idx) {
-  if (!error_handling(list, &idx))
+int get(const List *list, int index) {
+  if (!error_handling(list, &index))
     return -1;
 
-  return list->_ptr[idx];
+  return list->_ptr[index];
 }
 
-int find(const List *list, int val) {
+int find(const List *list, int value) {
   if (!error_handling(list, NULL))
     return -1;
 
-  for (int i = 0; i < list->_size || list->_ptr[i] != val; ++i) {
-    if (list->_ptr[i] == val)
+  for (int i = 0; i < list->_size || list->_ptr[i] != value; ++i) {
+    if (list->_ptr[i] == value)
       return i;
   }
 
   return -1;
 }
 
-bool contains(const List *list, const int val) {
+bool contains(const List *list, const int value) {
   if (!error_handling(list, NULL))
     return 0;
 
   for (int i = 0; i < list->_size; ++i)
-    if (list->_ptr[i] == val)
+    if (list->_ptr[i] == value)
       return 1;
 
   return 0;
@@ -225,6 +241,8 @@ List *construct(void) {
   }
 
   // bind all functions to its struct pointer
+  list->size = size;
+  list->cap = cap;
   list->add = add;
   list->insert = insert;
   list->pop = pop;

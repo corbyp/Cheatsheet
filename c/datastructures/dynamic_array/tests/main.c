@@ -3,6 +3,7 @@
 #include "unity_internals.h"
 
 #include <errno.h>
+#include <stdlib.h>
 
 List *list;
 
@@ -16,30 +17,49 @@ void setUp(void) {
 
 void tearDown(void) { deconstruct(list); }
 
-void test_add(void) {
-  TEST_ASSERT_EQUAL(3, list->_size);
-  TEST_ASSERT_EQUAL(4, list->_cap);
+void test_add_null(void) {
+  free(list->_ptr);
+  list->_ptr = NULL;
 
+  TEST_ASSERT_EQUAL(-1, list->add(list, 0));
+  TEST_ASSERT_EQUAL(EINVAL, errno);
+}
+
+void test_add(void) {
   for (int i = 3; i < 32768; ++i) {
     TEST_ASSERT_EQUAL(i, list->add(list, i));
     TEST_ASSERT_EQUAL(i + 1, list->_size);
     TEST_ASSERT_EQUAL(0, errno);
   }
 
+  TEST_ASSERT_EQUAL(2, list->get(list, 0));
+  TEST_ASSERT_EQUAL(9, list->get(list, 1));
+  TEST_ASSERT_EQUAL(13, list->get(list, 2));
   for (int i = 3; i < 32768; ++i) {
     TEST_ASSERT_EQUAL(i, list->get(list, i));
   }
 
-  TEST_ASSERT_EQUAL(2, list->get(list, 0));
-  TEST_ASSERT_EQUAL(9, list->get(list, 1));
-  TEST_ASSERT_EQUAL(13, list->get(list, 2));
   TEST_ASSERT_EQUAL(32768, list->_size);
   TEST_ASSERT_EQUAL(32768 * 2, list->_cap);
+}
+
+void test_insert_null(void) {
+  free(list->_ptr);
+  list->_ptr = NULL;
+
+  list->insert(list, 0, 0);
+  TEST_ASSERT_EQUAL(EINVAL, errno);
+}
+
+void test_insert_last(void) {
+  list->insert(list, 69, 3);
+  TEST_ASSERT_EQUAL(ERANGE, errno);
 }
 
 void test_insert(void) {
   list->insert(list, 420, 2);
   TEST_ASSERT_EQUAL(0, errno);
+  
   TEST_ASSERT_EQUAL(2, list->get(list, 0));
   TEST_ASSERT_EQUAL(9, list->get(list, 1));
   TEST_ASSERT_EQUAL(420, list->get(list, 2));
@@ -50,6 +70,7 @@ void test_insert(void) {
 
   list->insert(list, 1337, 1);
   TEST_ASSERT_EQUAL(0, errno);
+
   TEST_ASSERT_EQUAL(2, list->get(list, 0));
   TEST_ASSERT_EQUAL(1337, list->get(list, 1));
   TEST_ASSERT_EQUAL(9, list->get(list, 2));
@@ -58,9 +79,6 @@ void test_insert(void) {
 
   TEST_ASSERT_EQUAL(5, list->_size);
   TEST_ASSERT_EQUAL(8, list->_cap);
-
-  list->insert(list, 69, 5);
-  TEST_ASSERT_EQUAL(ERANGE, errno);
 }
 
 void test_pop(void) {
@@ -190,7 +208,9 @@ void test_clear(void) {
 int main(void) {
   UNITY_BEGIN();
 
+  RUN_TEST(test_add_null);
   RUN_TEST(test_add);
+  RUN_TEST(test_insert_null);
   RUN_TEST(test_insert);
   RUN_TEST(test_pop);
   RUN_TEST(test_delete);

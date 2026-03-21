@@ -7,9 +7,12 @@
  * itself and should be called with the list itself as the first argument.
  * All operations that can fail set errno on error.
  *
- * @note  All functions fail gracefully if passed a NULL pointer by
- *        returning early and writing EINVAL to errno. If a function has
- *        a return value but no errno documentation, refer to this note.
+ * @note All functions fail gracefully if passed a NULL pointer by
+ *       returning early and writing EINVAL to errno. If a function has
+ *       a return value but no errno documentation, refer to this note.
+ *
+ * @note Negative indeces can also be used instead of positive ones. They
+ *       automatically get translated using l->size - index
  *
  * Example:
  * @code
@@ -32,6 +35,22 @@ typedef struct List {
   int _cap;
   int *_ptr;
 
+  /**
+   * @brief Returns size.
+   *
+   * @param[in,out] list  Pointer to an initialised List.
+   * @return _size or -1.
+   */
+  int (*size)(const struct List *list);
+
+  /**
+   * @brief Returns _cap.
+   *
+   * @param[in,out] list  Pointer to an initialised List.
+   * @return _cap or -1.
+   */
+  int (*cap)(const struct List *list);
+  
   /**
    * @brief Adds element to end of list.
    *
