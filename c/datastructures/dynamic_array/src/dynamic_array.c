@@ -1,6 +1,5 @@
 #include "dynamic_array.h"
 
-#include <asm-generic/errno-base.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
