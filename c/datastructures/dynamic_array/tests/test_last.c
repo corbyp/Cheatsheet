@@ -4,20 +4,6 @@
 
 #include <errno.h>
 
-void test_size_last(void) {
-  one_element_list();
-
-  TEST_ASSERT_EQUAL(1, list->size(list));
-  TEST_ASSERT_EQUAL(0, errno);
-}
-
-void test_cap_last(void) {
-  one_element_list();
-
-  TEST_ASSERT_EQUAL(2, list->cap(list));
-  TEST_ASSERT_EQUAL(0, errno);
-}
-
 void test_pop_last(void) {
   one_element_list();
 

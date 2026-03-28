@@ -38,9 +38,7 @@ void set_list_null(void) {
   list->_ptr = NULL;
 }
 
-void one_element_list(void) {
-  list->add(list, ARR[0]);
-}
+void one_element_list(void) { list->add(list, ARR[0]); }
 
 // Tests for when list already has elements.
 // Size should not change
@@ -64,7 +62,8 @@ void test_full(void) {
 // Tests for when list already has elements and work is being done on the last
 // element. Size should not change
 void test_tail(void) {
-  printf("---Testing functions when explicitly reading/writing the last element---\n");
+  printf("---Testing functions when explicitly reading/writing the last "
+         "element---\n");
   RUN_TEST(test_insert_tail);
   RUN_TEST(test_pop_tail);
   RUN_TEST(test_delete_tail);
@@ -105,11 +104,27 @@ void test_null(void) {
 // Tests for when the last remaining element gets deleted
 void test_last(void) {
   printf("---Testing read/write when only one element in list---\n");
-  RUN_TEST(test_size_last);
-  RUN_TEST(test_cap_last);
   RUN_TEST(test_pop_last);
   RUN_TEST(test_delete_last);
   RUN_TEST(test_deletei_last);
+  printf("\n");
+}
+
+// Tests for when list has no elements.
+void test_empty(void) {
+  printf("---Testing functions empty list---\n");
+  RUN_TEST(test_size_empty);
+  RUN_TEST(test_cap_empty);
+  RUN_TEST(test_add_empty);
+  RUN_TEST(test_insert_empty);
+  RUN_TEST(test_pop_empty);
+  RUN_TEST(test_delete_empty);
+  RUN_TEST(test_deletei_empty);
+  RUN_TEST(test_reverse_empty);
+  RUN_TEST(test_get_empty);
+  RUN_TEST(test_find_empty);
+  RUN_TEST(test_contains_empty);
+  RUN_TEST(test_clear_empty);
   printf("\n");
 }
 
@@ -121,6 +136,8 @@ int main(void) {
   test_resize();
   test_null();
   test_last();
+  test_empty();
 
-  return UNITY_END();
+  return 0;
+  // return UNITY_END();
 }

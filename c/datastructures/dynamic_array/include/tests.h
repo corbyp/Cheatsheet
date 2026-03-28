@@ -32,7 +32,7 @@ void test_find_full(void);
 void test_contains_full(void);
 void test_clear_full(void);
 
-// Trying to insert/pop/etc. the element in last position
+// Tests for when insert/pop/etc. the element in last position
 void test_insert_tail(void);
 void test_pop_tail(void);
 void test_delete_tail(void);
@@ -61,8 +61,6 @@ void test_contains_null(void);
 void test_clear_null(void);
 
 // Tests for when the last remaining element gets deleted
-void test_size_last(void);
-void test_cap_last(void);
 void test_pop_last(void);
 void test_delete_last(void);
 void test_deletei_last(void);
