@@ -12,6 +12,9 @@ extern const int ARR_SIZE_RESIZE;
 extern const int ARR_CAP_RESIZE;
 extern const int ARR_RESIZE[];
 
+// Fuzzer functions
+void run_fuzzer(void);
+
 // Helper functions
 void fill_list(void);
 void fill_list_resize(void);
@@ -78,4 +81,3 @@ void test_get_empty(void);
 void test_find_empty(void);
 void test_contains_empty(void);
 void test_clear_empty(void);
-

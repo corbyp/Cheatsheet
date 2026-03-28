@@ -128,15 +128,19 @@ void test_empty(void) {
   printf("\n");
 }
 
-int main(void) {
-  UNITY_BEGIN();
-
+void run_unit_tests(void) {
   test_full();
   test_tail();
   test_resize();
   test_null();
   test_last();
   test_empty();
+}
+
+int main(void) {
+  UNITY_BEGIN();
+
+  run_fuzzer();
 
   return 0;
   // return UNITY_END();

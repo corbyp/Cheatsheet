@@ -173,7 +173,7 @@ int find(const List *list, int value) {
   if (!error_handling(list, NULL))
     return -1;
 
-  for (int i = 0; i < list->_size || list->_ptr[i] != value; ++i) {
+  for (int i = 0; i < list->_size; ++i) {
     if (list->_ptr[i] == value)
       return i;
   }
@@ -229,7 +229,7 @@ void info(const List *list) {
   if (!error_handling(list, NULL))
     return;
 
-  printf("Capacity: %d, Size: %d\n", list->_cap, list->_size);
+  printf("Size: %d, Cap: %d\n", list->_size, list->_cap);
 }
 
 List *construct(void) {
