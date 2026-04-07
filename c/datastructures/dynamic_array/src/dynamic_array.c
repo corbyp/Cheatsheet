@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // private helper functions
 
@@ -11,6 +12,9 @@ void adjust(List *list, const int new_size) {
   if (new_size >= list->_cap) {
     list->_cap *= 2;
     list->_ptr = reallocarray(list->_ptr, list->_cap, sizeof(int));
+    memset(list->_ptr + list->_size, 0,
+           (list->_cap - list->_size) * sizeof(int));
+
     if (!list->_ptr) {
       perror("Could not realloc array on add");
       exit(1);
@@ -115,6 +119,7 @@ int delete(List *list, const int value) {
     ;
 
   if (index == list->_size) {
+    errno = ENOENT;
     return -1;
   }
 
@@ -199,31 +204,36 @@ void clear(List *list) {
   adjust(list, 0);
 }
 
-void print(const List *list) {
+void print_to(FILE *stream, const List *list) {
   if (!error_handling(list, NULL))
     return;
 
   if (!list->_size) {
-    printf("[]\n");
+    fprintf(stream, "[]\n");
     return;
   }
-  printf("[");
-  for (int i = 0; i < list->_size - 1; ++i)
-    printf("%d, ", list->_ptr[i]);
 
-  printf("%d]\n", list->_ptr[list->_size - 1]);
+  fprintf(stream, "[");
+  for (int i = 0; i < list->_size - 1; ++i)
+    fprintf(stream, "%d, ", list->_ptr[i]);
+
+  fprintf(stream, "%d]\n", list->_ptr[list->_size - 1]);
 }
 
-void print2(const List *list) {
+void print(const List *list) { print_to(stdout, list); }
+
+void print2_to(FILE *stream, const List *list) {
   if (!error_handling(list, NULL))
     return;
 
-  printf("[");
+  fprintf(stream, "[");
   for (int i = 0; i < list->_cap - 1; ++i)
-    printf("%d, ", list->_ptr[i]);
-  
-  printf("%d]\n", list->_ptr[list->_cap - 1]);
+    fprintf(stream, "%d, ", list->_ptr[i]);
+
+  fprintf(stream, "%d]\n", list->_ptr[list->_cap - 1]);
 }
+
+void print2(const List *list) { print2_to(stdout, list); }
 
 void info(const List *list) {
   if (!error_handling(list, NULL))

@@ -27,6 +27,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef struct List {
   int _size;
@@ -50,7 +51,7 @@ typedef struct List {
    * @return _cap or -1.
    */
   int (*cap)(const struct List *list);
-  
+
   /**
    * @brief Adds element to end of list.
    *
@@ -170,6 +171,17 @@ typedef struct List {
   void (*clear)(struct List *list);
 
   /**
+   * @brief Prints list in format [1, 2, 3] to given stream.
+   *
+   * Only prints elements within size of list.
+   * O(n) operation.
+   *
+   * @param[in] FILE Pointer to the intended output stream.
+   * @param[in] list Pointer to an initialised List.
+   */
+  void (*print_to)(FILE *stream, const struct List *list);
+
+  /**
    * @brief Prints list in format [1, 2, 3]
    *
    * Only prints elements within size of list.
@@ -180,7 +192,19 @@ typedef struct List {
   void (*print)(const struct List *list);
 
   /**
-   * @brief Prints list in format [1, 2, 3, 0, 0]
+   * @brief Prints list in format [1, 2, 3, 0, 0] to given stream.
+   *
+   * Also prints uninitialised values that are not within
+   * size but within capacity.
+   * O(n) operation.
+   *
+   * @param[in] FILE Pointer to the intended output stream.
+   * @param[in] list Pointer to an initialised List.
+   */
+  void (*print2_to)(FILE *stream, const struct List *list);
+
+  /**
+   * @brief Prints list in format [1, 2, 3, 0, 0].
    *
    * Also prints uninitialised values that are not within
    * size but within capacity.
