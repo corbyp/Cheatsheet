@@ -27,14 +27,18 @@
 #pragma once
 
 #include <stdbool.h>
-#include <stdio.h>
+
+typedef struct Node {
+  int value;
+  struct Node *next;
+} Node;
 
 typedef struct List {
   int _size;
+  int _cap;
   // How many elements the list can hold until it needs to be
   // expanded. On expansion: 2 * _cap, thus making _cap a power of 2.
-  int _cap;
-  int *_ptr;
+  Node *root;
 
   /**
    * @brief Returns size.

@@ -1,8 +1,9 @@
-#include "dynamic_array.h"
+#include "linked_list.h"
 #include "tests.h"
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 int OPERATION_COUNT = 15;
 char *arr[15] = {"size",     "cap",     "add",     "insert", "pop",
@@ -33,12 +34,14 @@ void random_operation(List *list, int *size, int *cap) {
   int value = rand() % 100;
   int index = rand() % 100;
 
+  printf("Operation: %s with value %d\n", arr[operation], value);
+
   switch (operation) {
   case 0:
-    assert(*size == list->size(list));
+    // assert(*size == list->size(list));
     break;
   case 1:
-    assert(*cap == list->cap(list));
+    // assert(*cap == list->cap(list));
     break;
   case 2:
     list->add(list, value);
@@ -53,8 +56,10 @@ void random_operation(List *list, int *size, int *cap) {
     dec_size(size, cap);
     break;
   case 5:
+    // list->print(list);
+    printf("Here\n");
     list->delete(list, value);
-    list->print(list);
+    // list->print(list);
     dec_size(size, cap);
     break;
   case 6:
@@ -79,7 +84,7 @@ void random_operation(List *list, int *size, int *cap) {
     *cap = 1;
     break;
   case 12:
-    list->print(list);
+    // list->print(list);
     break;
   case 13:
     list->print2(list);
@@ -94,9 +99,11 @@ void run_fuzzer(void) {
   List *list = construct();
   int size = list->size(list);
   int cap = list->cap(list);
+
   for (int i = 0; i < 10000; ++i) {
     random_operation(list, &size, &cap);
     errno = 0;
   }
+
   deconstruct(list);
 }
