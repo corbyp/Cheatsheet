@@ -8,4 +8,3 @@ I often forget how certain things work. Instead of looking up tutorials all the 
 
 - **[Programming](programming/)**
 - **[Linux](linux/)**
-
