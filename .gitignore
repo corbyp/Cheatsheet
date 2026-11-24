@@ -2,6 +2,8 @@
 
 !*/
 
+!*.nix
+!*.lock
 !*.md
 !Makefile
 
