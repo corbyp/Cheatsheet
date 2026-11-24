@@ -214,7 +214,7 @@ void print(const List *list) {
   str[str_len - 2] = ']';
   str[str_len - 1] = '\0';
 
-  printf("%s\n", str);
+  printf("%s", str);
 }
 
 void print2(const List *list) {}

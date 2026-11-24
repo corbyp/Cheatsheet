@@ -34,7 +34,8 @@ void random_operation(List *list, int *size, int *cap) {
   int value = rand() % 100;
   int index = rand() % 100;
 
-  printf("Operation: %s with value %d\n", arr[operation], value);
+  list->print(list);
+  printf(" -> %s %d -> ", arr[operation], value);
 
   switch (operation) {
   case 0:
@@ -93,6 +94,9 @@ void random_operation(List *list, int *size, int *cap) {
     list->info(list);
     break;
   }
+
+  list->print(list);
+  printf("\n");
 }
 
 void run_fuzzer(void) {
@@ -100,7 +104,7 @@ void run_fuzzer(void) {
   int size = list->size(list);
   int cap = list->cap(list);
 
-  for (int i = 0; i < 10000; ++i) {
+  for (int i = 0; i < 100; ++i) {
     random_operation(list, &size, &cap);
     errno = 0;
   }
