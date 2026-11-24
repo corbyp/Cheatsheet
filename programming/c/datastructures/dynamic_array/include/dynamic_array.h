@@ -27,7 +27,8 @@
 #pragma once
 
 #include <stdbool.h>
-#include <stdio.h>
+
+#define EXPANSION_FACTOR 2
 
 typedef struct List {
   int _size;

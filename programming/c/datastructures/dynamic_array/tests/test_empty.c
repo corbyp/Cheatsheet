@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "unity.h"
+#include <unity/unity.h>
 
 #include <errno.h>
 

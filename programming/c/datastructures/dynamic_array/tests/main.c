@@ -1,6 +1,6 @@
 #include "dynamic_array.h"
 #include "tests.h"
-#include "unity.h"
+#include <unity/unity.h>
 
 #include <errno.h>
 #include <stdlib.h>
