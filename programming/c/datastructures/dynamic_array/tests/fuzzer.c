@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unity/unity.h>
+#include <stdio.h>
 
 #include "dynamic_array.h"
 #include "tests.h"
@@ -52,7 +53,7 @@ void dec_size(int *size, int *cap) {
     *cap = 1;
 }
 
-void clear(int *size, int *cap) {
+void reset_size(int *size, int *cap) {
   *size = 0;
   *cap = 1;
 }
@@ -103,7 +104,7 @@ void random_operation(List *list, int *size, int *cap) {
     break;
   case CLEAR:
     list->clear(list);
-    clear(size, cap);
+    reset_size(size, cap);
     break;
   case PRINT:
     list->print(list);

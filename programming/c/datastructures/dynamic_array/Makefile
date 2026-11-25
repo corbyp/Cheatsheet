@@ -14,7 +14,7 @@ CFLAGS_SANITIZE = -fsanitize=address,undefined,leak -g
 
 .PHONY: all run trun drun srun compile tcompile dcompile scompile exec dexec texec valgrind clean
 
-all: trun
+all: test
 
 # production
 compile:
@@ -49,6 +49,6 @@ clean:
 	rm -rf .cache $(TARGET)
 
 run: compile exec clean
-trun: tcompile texec clean
-drun: dcompile dexec clean
-srun: scompile exec clean tcompile valgrind clean
+test: tcompile texec clean
+debug: dcompile dexec clean
+sanitize: scompile exec clean tcompile valgrind clean
