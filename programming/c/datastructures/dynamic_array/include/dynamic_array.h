@@ -26,17 +26,9 @@
  */
 #pragma once
 
-#include <stdbool.h>
-
 #define EXPANSION_FACTOR 2
 
 typedef struct List {
-  int _size;
-  // How many elements the list can hold until it needs to be
-  // expanded. On expansion: 2 * _cap, thus making _cap a power of 2.
-  int _cap;
-  int *_ptr;
-
   /**
    * @brief Returns size.
    *
@@ -77,7 +69,7 @@ typedef struct List {
    * @param[in]     value Value that is to be inserted.
    * @param[in]     index Index where to insert value.
    */
-  void (*insert)(struct List *list, const int value, int index);
+  int (*insert)(struct List *list, const int value, int index);
 
   /**
    * @brief Removes element at last position and returns its value.
@@ -121,7 +113,7 @@ typedef struct List {
    *
    * @param[in,out] list Pointer to an initialised List.
    */
-  void (*reverse)(struct List *list);
+  int (*reverse)(struct List *list);
 
   /**
    * @brief Returns value at given index.
@@ -157,7 +149,7 @@ typedef struct List {
    * @param[in] value Value to be checked.
    * @return true if value is present in list, otherwise false.
    */
-  bool (*contains)(const struct List *list, const int value);
+  int (*contains)(const struct List *list, const int value);
 
   /**
    * @brief Removes all elements of list.
@@ -169,7 +161,7 @@ typedef struct List {
    *
    * @param[in,out] list Pointer to an initialised List.
    */
-  void (*clear)(struct List *list);
+  int (*clear)(struct List *list);
 
   /**
    * @brief Prints list in format [1, 2, 3]
@@ -179,7 +171,7 @@ typedef struct List {
    *
    * @param[in] list Pointer to an initialised List.
    */
-  void (*print)(const struct List *list);
+  int (*print)(const struct List *list);
 
   /**
    * @brief Prints list in format [1, 2, 3, 0, 0].
@@ -190,7 +182,7 @@ typedef struct List {
    *
    * @param[in] list Pointer to an initialised List.
    */
-  void (*print2)(const struct List *list);
+  int (*print2)(const struct List *list);
 
   /**
    * @brief Prints size and capacity of list.
@@ -199,14 +191,14 @@ typedef struct List {
    *
    * @param[in] list Pointer to an initialised List.
    */
-  void (*info)(const struct List *list);
+  int (*info)(const struct List *list);
 } List;
 
 /**
  * @brief Initialise the List with capacity 1.
  *
  * Allocates internal storage and binds functions. Must be paired with a call
- * to deconstruct() to avoid memory leaks.
+ * to deconstruct() to aint memory leaks.
  *
  * @return a pointer to a list initialised on the heap.
  */
@@ -219,4 +211,4 @@ List *construct(void);
  *
  * @param[out] list Pointer to an initialised List.
  */
-void deconstruct(struct List *list);
+int deconstruct(struct List *list);
